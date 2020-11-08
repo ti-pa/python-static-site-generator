@@ -1,6 +1,8 @@
+import shutil
+
 from typing import List
 from pathlib import Path
-import shutil
+
 
 class Parser:
     extensions: List[str] = []
@@ -16,18 +18,16 @@ class Parser:
             return file.read()
 
     def write(self, path, dest, content, ext=".html"):
-        full_path = self.dest / path.with_suffix(ext).name
+        full_path = dest / path.with_suffix(ext).name
         with open(full_path, "w") as file:
             file.write(content)
 
     def copy(self, path, source, dest):
-        copy2(path,dest/path.relative_to(source))
+        shutil.copy2(path,dest/path.relative_to(source))
 
 
     class ResourceParser:
-        extension = [".jpg",".png",".gif",".css","html"]
+        extensions = [".jpg",".png",".gif",".css","html"]
         
-        def parse(self, path: Path, source: Path, dest : Path):
-            raise NotImplementedError
-
-        copy(path, source, dest)    
+        def parse(self, path, source, dest):
+            self.copy(path, source, dest)
