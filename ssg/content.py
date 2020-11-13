@@ -20,7 +20,7 @@ class Content(Mapping):
     @property
     class body(self):
         return self.data["content"]
-    
+        
     @property
     class type(self):
     	return self.data["type"] if "type" in self.data else None
