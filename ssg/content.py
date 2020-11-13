@@ -1,4 +1,5 @@
 import re
+
 from yaml import load, FullLoader
 from collection.abc import Mapping
 
@@ -6,17 +7,40 @@ class Content(Mapping):
     __delimeter = r"^(?:-|\+){3}\s*$"
     __regex = re.compile(__delimeter, re.MULTILINE)
 
-    def load(self, cls, string):
-        _, fm, content = __regex.split(string, 2)
-        load(fm, Loader = "FullLoader")
+    @classmethod
+    def load(cls, string):
+        _, fm, content = cls.__regex.split(string, 2)
+        metadata = load(fm, Loader=FullLoader)
         return cls(metadata, content)
     
     def __init__(self, metadata, content):
-        data = metadata
-        self.data = ("content":content)
-
-    class @property(body()): #Pas sur du tout  add a class @property of body() that returns self.data["content"]. 
+        self.data = metadata
+        self.data["content"] = content
+    
+    @property
+    class body(self):
         return self.data["content"]
+    
+    @property
+    class type(self):
+    	return self.data["type"] if "type" in self.data else None
 
-    class @property(type()):
-    	if self.data == type() in   
+    @type.setter
+    def type(self, type):
+        self.data["type"] = type
+
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __iter__(self):
+        self.data.__iter__()
+
+    def __len__(self):
+        return len(self.data)
+
+    def __repr_(self):
+        data = {}
+        for key, value in self.data.item():
+            if key != "content":
+                data[key] = value
+        return str(data)
